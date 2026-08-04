@@ -10,6 +10,7 @@ const PORT = process.env.PORT ? process.env.PORT : "3001"
 const authCtrl = require('./controllers/auth')
 const usersCtrl = require('./controllers/users')
 const hootCtrl = require('./controllers/hoots')
+const commentsCtrl = require('./controllers/comments')
 
 const verifyToken = require('./middleware/verify-token')
 
@@ -36,6 +37,11 @@ app.get('/hoots', verifyToken, hootCtrl.index)
 app.get('/hoots/:hootId', verifyToken, hootCtrl.show)
 app.put('/hoots/:hootId', verifyToken, hootCtrl.update)
 app.delete('/hoots/:hootId', verifyToken, hootCtrl.deleteHoot)
+
+// Comments Routes
+app.post('/hoots/:hootId/comments', verifyToken, commentsCtrl.create)
+app.put('/hoots/:hootId/comments/:commentId', verifyToken, commentsCtrl.update)
+app.delete('/hoots/:hootId/comments/:commentId', verifyToken, commentsCtrl.deleteComment)
 
 app.listen(PORT, () => {
   console.log(`The express app is ready on port ${PORT}! 😀`)
