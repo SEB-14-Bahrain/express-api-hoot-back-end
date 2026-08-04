@@ -65,8 +65,6 @@ const signIn = async (req, res) => {
 }
 
 module.exports = {
-    // signToken,
-    // verifyToken,
     signUp,
     signIn,
 }
