@@ -3,25 +3,6 @@ const bcrypt = require('bcrypt')
 
 const User = require('../models/user')
 
-// const signToken = (req, res) => {
-
-//     const user = {
-//         id: 1,
-//         username: 'test',
-//         password: 'test',
-//     }
-
-//     // create a token
-//     const token = jwt.sign({ user }, process.env.JWT_SECRET)
-//     res.json({ token })
-// }
-
-// const verifyToken = (req, res) => {
-//     const token = req.headers.authorization.split(' ')[1]
-//     const decoded = jwt.verify(token, process.env.JWT_SECRET)
-//     res.json({ decoded })
-// }
-
 const signUp = async (req, res) => {
     try {
         // check if user in database already
