@@ -1,9 +1,19 @@
 const dotenv = require('dotenv').config()
 const express = require('express')
-const app = express()
 const mongoose = require('mongoose')
 const cors = require('cors')
 const morgan = require('morgan')
+const http = require('http')
+const { Server } = require('socket.io')
+
+const app = express()
+const server = http.createServer(app)
+
+const io = new Server(server, {
+  cors: {
+    origin: 'http://localhost:5174',
+  },
+})
 
 const PORT = process.env.PORT ? process.env.PORT : "3000"
 
@@ -43,6 +53,28 @@ app.post('/hoots/:hootId/comments', verifyToken, commentsCtrl.create)
 app.put('/hoots/:hootId/comments/:commentId', verifyToken, commentsCtrl.update)
 app.delete('/hoots/:hootId/comments/:commentId', verifyToken, commentsCtrl.deleteComment)
 
-app.listen(PORT, () => {
+io.on('connection', (socket) => {
+  console.log('Socket connected: ', socket.id)
+
+  socket.on('chat message', (messageData) => {
+    console.log('Chat event received:', messageData)
+
+    const newMessage = {
+      id: `${socket.id}=${Date.now()}`,
+      username: messageData.username,
+      text: messageData.text,
+    }
+
+    console.log('Chat event broadcast: ', newMessage)
+
+    io.emit('chat message', newMessage)
+  })
+
+  socket.on('disconnect',() => {
+    console.log('Socket disconnected: ', socket.id)
+  })
+})
+
+server.listen(PORT, () => {
   console.log(`The express app is ready on port ${PORT}! 😀`)
 })
